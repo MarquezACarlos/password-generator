@@ -13,8 +13,8 @@
   --accent: #990000;   /* crimson */
   --accent-soft: #bb0000;
 
-  --good:#ffffff;
-  --warn:#dddddd;
+  --good:#3cff00;
+  --warm:#ff7e28;
   --bad:#990000;
 
   --radius: 10px;
@@ -229,7 +229,7 @@ body{
 .quality__fill{
   height:100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--bad), var(--warn), var(--good));
+  background: linear-gradient(90deg, var(--bad), var(--warm), var(--good));
 }
 .quality__meta{
   display:flex;
