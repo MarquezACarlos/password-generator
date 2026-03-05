@@ -37,6 +37,9 @@ Optional Features/Bonus:
 //     alert("yes");
 //   }
 //   alert(document.getElementById("optUpper").value);
+// document.getElementById("PRESSED").onclick = function() {
+//   alert("lets go");
+// };
 
 const lowerSet = ["a", "b","c", "d","e", "f","g", "h","i", "j","k", "l","m", "n","o", "p","q", "r","s", "t","u", "v","w", "x","y", "z"];
 const upperSet = ["A", "B","C", "D","E", "F","G", "H","I", "J","K", "L","M", "N","O", "P","Q", "R","S", "T","U", "V","W", "X","Y", "Z"];
@@ -44,12 +47,13 @@ const numSet = ["0","1","2","3","4","5","6","7","8","9"];
 const specialSet = ["!","@","#","$","%","^","&","*","+","=", "/", "|", "\\", ";", ":", "?", "\"", "\'", ",", ".", "~", "`"]; //22
 const bracketSet = ["[", "]", "{", "}", "(", ")"];
 
-
 function generatePassword(){
   const masterSet = [];
   const includeChars = [];
   var password = "";
+  let poolSize = 0;
   const pwLen = document.getElementById("length").value;
+
   if(document.getElementById("optUpper").checked) masterSet.push(upperSet);
   if(document.getElementById("optLower").checked) masterSet.push(lowerSet);
   if(document.getElementById("optDigits").checked) masterSet.push(numSet);
@@ -67,6 +71,16 @@ function generatePassword(){
   }
   if(includeChars.length > 0) masterSet.push(includeChars);
 
+  //Entropy Calculation
+  for (const set of masterSet){
+    poolSize += set.length;
+  }
+
+  const entropy = Math.log2(poolSize**pwLen);
+  document.getElementById("qualityBits").textContent = Math.round(entropy);
+  const MAX_ENTROPY = 128;
+  const percent = Math.min(100, (entropy/MAX_ENTROPY)*100);
+  document.querySelector(".quality__fill").style.width = percent + "%";
 
   const pwSeed = new Uint32Array(pwLen);
   self.crypto.getRandomValues(pwSeed);
@@ -76,8 +90,9 @@ function generatePassword(){
     const j = Math.floor((Math.random()*masterSet[i].length));
 
     password += masterSet[i][j];
-    document.getElementById("passwordOut").value = password;
   }
+
+  document.getElementById("passwordOut").value = password;
 };
 
 function copyPassword(){
@@ -87,16 +102,27 @@ function copyPassword(){
   navigator.clipboard.writeText(copyText.value);
 };
 
-// document.getElementById("PRESSED").onclick = function() {
-//   alert("lets go");
-// };
+function updateQuality(pw) {
+  const poolSize = pw.length > 0 ? new Set(pw).size : 0; // unique chars used
+  const bits = (pw.length > 0 && poolSize > 1) ? (pw.length * Math.log2(poolSize)) : 0;
 
+  document.getElementById("qualityBits").textContent = Math.round(bits);
+
+  const MAX_ENTROPY = 128;
+  const percent = Math.min(100, (bits / MAX_ENTROPY) * 100);
+
+  document.querySelector(".quality__fill").style.width = percent + "%";
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const lengthInput = document.getElementById("length");
   const lengthHint = document.getElementById("lengthHint");
   const qualityChars = document.getElementById("qualityChars");
-
+  const pwBox = document.getElementById("passwordOut");
+  
+  pwBox.addEventListener("input", () => {
+    updateQuality(pwBox.value);
+  });
   const syncLength = () => {
     const v = lengthInput.value || "20";
     lengthHint.textContent = v;
