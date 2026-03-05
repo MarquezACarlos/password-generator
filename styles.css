@@ -1,11 +1,11 @@
 :root{
   --bg: #0a0a0a;
 
-  --panel: #111111;
-  --panel-light: #1a1a1a;
+  --text: #111111;
+  --muted: #1a1a1a;
 
-  --text: #ffffff;
-  --muted: #bbbbbb;
+  --panel: #ffffff;
+  --panel-light: #bbbbbb;
 
   --line: #2a2a2a;
 
