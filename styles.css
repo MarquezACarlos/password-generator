@@ -1,19 +1,26 @@
 :root{
-  --bg: #0f1220;
-  --panel: #161a2d;
-  --text: #e9ecff;
-  --muted:#aab1d6;
-  --line:#2a2f52;
+  --bg: #0a0a0a;
 
-  --accent:#7aa2ff;
-  --good:#6ee7a8;
-  --warn:#ffd66e;
-  --bad:#ff6e86;
+  --panel: #111111;
+  --panel-light: #1a1a1a;
 
-  --radius: 14px;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --text: #ffffff;
+  --muted: #bbbbbb;
 
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --line: #2a2a2a;
+
+  /* Accent colors */
+  --accent: #990000;   /* crimson */
+  --accent-soft: #bb0000;
+
+  --good:#ffffff;
+  --warn:#dddddd;
+  --bad:#990000;
+
+  --radius: 10px;
+  --shadow: none;
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
 }
 
@@ -22,9 +29,7 @@ html,body{ height:100%; }
 body{
   margin:0;
   font-family: var(--sans);
-  background: radial-gradient(1200px 600px at 20% 10%, rgba(122,162,255,.18), transparent 60%),
-              radial-gradient(900px 500px at 90% 10%, rgba(89,213,255,.12), transparent 55%),
-              var(--bg);
+  background: #0a0a0a;
   color:var(--text);
 }
 
@@ -59,11 +64,11 @@ body{
 .single{ margin-top: 14px; }
 
 .card{
-  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 
 .card__header{
@@ -108,8 +113,8 @@ body{
 
 .input, .select, .textarea{
   width:100%;
-  background: rgba(0,0,0,.18);
-  border: 1px solid var(--line);
+  background: #111;
+  border: 1px solid #333;
   color: var(--text);
   border-radius: 10px;
   padding: 10px 10px;
@@ -147,9 +152,8 @@ body{
 }
 .btn:hover{ border-color: rgba(122,162,255,.55); }
 .btn--secondary{ color: var(--muted); }
-.btn--primary{
-  background: rgba(122,162,255,.18);
-  border-color: rgba(122,162,255,.55);
+.btn:hover{
+  border-color: var(--accent);
 }
 .btn--ghost{
   background: transparent;
@@ -225,7 +229,7 @@ body{
 .quality__fill{
   height:100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--bad), var(--warn), var(--good));
+  background: var(--accent);
 }
 .quality__meta{
   display:flex;
