@@ -42,9 +42,6 @@ const lowerSet = ["a", "b","c", "d","e", "f","g", "h","i", "j","k", "l","m", "n"
 const upperSet = ["A", "B","C", "D","E", "F","G", "H","I", "J","K", "L","M", "N","O", "P","Q", "R","S", "T","U", "V","W", "X","Y", "Z"];
 const numSet = ["0","1","2","3","4","5","6","7","8","9"];
 const specialSet = ["!","@","#","$","%","^","&","*","+","=", "/", "|", "\\", ";", ":", "?", "\"", "\'", ",", ".", "~", "`"]; //22
-const minusSet = ["-"];
-const underSet = ["_"];
-const spaceSet = [" "];
 const bracketSet = ["[", "]", "{", "}", "(", ")"];
 
 
@@ -56,9 +53,9 @@ function generatePassword(){
   if(document.getElementById("optUpper").checked) masterSet.push(upperSet);
   if(document.getElementById("optLower").checked) masterSet.push(lowerSet);
   if(document.getElementById("optDigits").checked) masterSet.push(numSet);
-  if(document.getElementById("optMinus").checked) masterSet.push(minusSet);
-  if(document.getElementById("optUnderline").checked) masterSet.push(underSet);
-  if(document.getElementById("optSpace").checked) masterSet.push(spaceSet);
+  if(document.getElementById("optMinus").checked) includeChars.push("-");
+  if(document.getElementById("optUnderline").checked) includeChars.push("_");
+  if(document.getElementById("optSpace").checked) includeChars.push(" ");
   if(document.getElementById("optSpecial").checked) masterSet.push(specialSet);
   if(document.getElementById("optBrackets").checked) masterSet.push(bracketSet);
   if(document.getElementById("includeChars").value != ""){
@@ -67,8 +64,8 @@ function generatePassword(){
       if(char == " ") continue;
       else includeChars.push(char);
     }
-    masterSet.push(includeChars);
   }
+  if(includeChars.length > 0) masterSet.push(includeChars);
 
 
   const pwSeed = new Uint32Array(pwLen);
@@ -76,7 +73,8 @@ function generatePassword(){
   
   for(const num of pwSeed){
     const i = num%masterSet.length;
-    const j = num%masterSet[i].length;
+    const j = Math.floor((Math.random()*masterSet[i].length));
+
     password += masterSet[i][j];
     document.getElementById("passwordOut").value = password;
   }
