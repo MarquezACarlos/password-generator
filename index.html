@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Password Generator (KeePass-inspired)</title>
+  <title>Password Generator</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -13,7 +13,7 @@
         <div class="brand__icon" aria-hidden="true">🔑</div>
         <div>
           <h1 class="brand__title">Password Generator</h1>
-          <p class="brand__subtitle">KeePass-inspired merged generator + preview</p>
+          <p class="brand__subtitle">KeePass-inspired generator + strength preview</p>
         </div>
       </div>
       <div class="topbar__actions">
@@ -21,215 +21,26 @@
       </div>
     </header>
 
-    <main class="grid">
-      <!-- LEFT: Options -->
+    <main class="single">
       <section class="card">
         <div class="card__header">
-          <h2>Password Generation Options</h2>
-          <p>Define properties of generated passwords.</p>
+          <h2>Generate Password</h2>
+          <p>Configure character set options and preview strength in one place.</p>
         </div>
 
-        <div class="tabs" role="tablist" aria-label="Generator Tabs">
-          <button class="tab tab--active" type="button" data-tab="settings" role="tab" aria-selected="true">Settings</button>
-          <button class="tab" type="button" data-tab="advanced" role="tab" aria-selected="false">Advanced</button>
-          <button class="tab" type="button" data-tab="preview" role="tab" aria-selected="false">Preview</button>
-        </div>
-
-        <!-- SETTINGS TAB -->
-        <div class="tabpanel tabpanel--active" id="tab-settings" role="tabpanel">
+        <!-- Output (TOP) -->
+        <div class="panel">
           <div class="row">
-            <label class="label" for="profile">Profile</label>
+            <label class="label" for="passwordOut">Password</label>
             <div class="row__field">
-              <select id="profile" class="select">
-                <option>(Derive from previous password)</option>
-                <option>Default</option>
-                <option>High Security</option>
-                <option>Custom</option>
-              </select>
-              <div class="row__icons" aria-hidden="true">
-                <button class="iconbtn" type="button" title="Edit profile">✎</button>
-                <button class="iconbtn" type="button" title="Duplicate profile">⧉</button>
-                <button class="iconbtn" type="button" title="Delete profile">🗑</button>
-              </div>
-            </div>
-          </div>
-
-          <fieldset class="fieldset">
-            <legend>Current settings</legend>
-
-            <label class="radio">
-              <input type="radio" name="mode" value="charset" checked />
-              <span>Generate using character set</span>
-            </label>
-
-            <div class="indent" data-mode="charset">
-              <div class="row">
-                <label class="label" for="length">Length of generated password</label>
-                <div class="row__field row__field--tight">
-                  <input id="length" class="input input--number" type="number" min="4" max="128" value="20" />
-                  <span class="hint" id="lengthHint">20</span>
-                </div>
-              </div>
-
-              <div class="twoCol">
-                <div class="checkCol">
-                  <label class="check"><input type="checkbox" checked /> <span>Upper-case (A, B, C, ...)</span></label>
-                  <label class="check"><input type="checkbox" checked /> <span>Lower-case (a, b, c, ...)</span></label>
-                  <label class="check"><input type="checkbox" checked /> <span>Digits (0, 1, 2, ...)</span></label>
-                  <label class="check"><input type="checkbox" /> <span>Minus (-)</span></label>
-                  <label class="check"><input type="checkbox" /> <span>Underline (_)</span></label>
-                </div>
-
-                <div class="checkCol">
-                  <label class="check"><input type="checkbox" /> <span>Space ( )</span></label>
-                  <label class="check"><input type="checkbox" /> <span>Special (!, $, %, &, ...)</span></label>
-                  <label class="check"><input type="checkbox" /> <span>Brackets ({ }, [ ], ( ), &lt; &gt;)</span></label>
-                  <label class="check"><input type="checkbox" /> <span>Latin-1 Supplement (Å, µ, ñ, ...)</span></label>
-                </div>
-              </div>
-
-              <div class="row">
-                <label class="label" for="includeChars">Also include the following characters</label>
-                <div class="row__field">
-                  <input id="includeChars" class="input" type="text" placeholder="e.g., @#?" />
-                </div>
-              </div>
-            </div>
-
-            <label class="radio">
-              <input type="radio" name="mode" value="pattern" />
-              <span>Generate using pattern</span>
-            </label>
-
-            <div class="indent is-disabled" data-mode="pattern">
-              <div class="row">
-                <label class="label" for="pattern">Pattern</label>
-                <div class="row__field">
-                  <input id="pattern" class="input" type="text" placeholder="(UI only — not implemented)" disabled />
-                </div>
-              </div>
-
-              <label class="check">
-                <input type="checkbox" disabled />
-                <span>Randomly permute characters of password</span>
-              </label>
-            </div>
-
-            <label class="radio">
-              <input type="radio" name="mode" value="custom" />
-              <span>Generate using custom algorithm</span>
-            </label>
-
-            <div class="indent is-disabled" data-mode="custom">
-              <div class="row">
-                <label class="label" for="algo">Algorithm</label>
-                <div class="row__field">
-                  <select id="algo" class="select" disabled>
-                    <option>(None)</option>
-                  </select>
-                  <button class="iconbtn" type="button" title="Settings" disabled>⚙</button>
-                </div>
-              </div>
-            </div>
-
-            <label class="check">
-              <input type="checkbox" />
-              <span>Show dialog for collecting user input as additional entropy</span>
-            </label>
-          </fieldset>
-        </div>
-
-        <!-- ADVANCED TAB -->
-        <div class="tabpanel" id="tab-advanced" role="tabpanel" hidden>
-          <fieldset class="fieldset">
-            <legend>Advanced Options</legend>
-
-            <label class="check">
-              <input type="checkbox" />
-              <span>Avoid ambiguous characters (O/0, l/1, I/1)</span>
-            </label>
-
-            <label class="check">
-              <input type="checkbox" />
-              <span>Require at least one character from each selected set</span>
-            </label>
-
-            <div class="row">
-              <label class="label" for="excludeChars">Exclude characters</label>
-              <div class="row__field">
-                <input id="excludeChars" class="input" type="text" placeholder="e.g., O0l1" />
-              </div>
-            </div>
-
-            <div class="row">
-              <label class="label" for="notesAdvanced">Notes</label>
-              <div class="row__field">
-                <textarea id="notesAdvanced" class="textarea" rows="4" placeholder="UI placeholder — logic not implemented"></textarea>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-
-        <!-- PREVIEW TAB -->
-        <div class="tabpanel" id="tab-preview" role="tabpanel" hidden>
-          <fieldset class="fieldset">
-            <legend>Preview</legend>
-            <p class="muted">This area will later show a live preview of the generated password and character pool summary.</p>
-
-            <div class="previewBox">
-              <div class="previewLine">
-                <span class="pill">Length: <strong id="previewLength">20</strong></span>
-                <span class="pill">Mode: <strong id="previewMode">Character Set</strong></span>
-              </div>
-              <div class="previewFake">
-                <span class="mono">[preview will appear here later]</span>
-              </div>
-            </div>
-          </fieldset>
-        </div>
-
-        <div class="footerRow">
-          <button class="btn" type="button">OK</button>
-          <button class="btn btn--secondary" type="button">Cancel</button>
-        </div>
-      </section>
-
-      <!-- RIGHT: Entry / Output -->
-      <section class="card">
-        <div class="card__header">
-          <h2>Add Entry (Merged Preview)</h2>
-          <p>Generate and review output in the same view.</p>
-        </div>
-
-        <div class="tabs tabs--sub" role="tablist" aria-label="Entry Tabs">
-          <button class="tab tab--active" type="button">General</button>
-          <button class="tab" type="button">Advanced</button>
-          <button class="tab" type="button">Properties</button>
-          <button class="tab" type="button">Auto-Type</button>
-          <button class="tab" type="button">History</button>
-        </div>
-
-        <div class="form">
-          <div class="row">
-            <label class="label" for="title">Title</label>
-            <div class="row__field">
-              <input id="title" class="input" type="text" placeholder="e.g., Gmail" />
-              <button class="iconbtn" type="button" title="Icon">🖼</button>
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="label" for="username">User name</label>
-            <div class="row__field">
-              <input id="username" class="input" type="text" placeholder="e.g., carlos@example.com" />
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="label" for="password">Password</label>
-            <div class="row__field">
-              <input id="password" class="input mono" type="text" value="(generated password will appear here)" readonly />
-              <button class="iconbtn" type="button" title="Show/Hide">👁</button>
+              <input
+                id="passwordOut"
+                class="input mono"
+                type="text"
+                value="(generated password will appear here)"
+                readonly
+              />
+              <button class="iconbtn" type="button" title="Show/Hide (UI only)">👁</button>
               <button class="iconbtn" type="button" title="Generate (UI only)">🎲</button>
             </div>
           </div>
@@ -238,51 +49,71 @@
             <label class="label">Quality</label>
             <div class="row__field quality">
               <div class="quality__bar" aria-hidden="true">
+                <!-- UI-only placeholder fill -->
                 <div class="quality__fill" style="width: 65%"></div>
               </div>
+
               <div class="quality__meta">
                 <span class="mono"><strong id="qualityBits">107</strong> bits</span>
                 <span class="muted"><span id="qualityChars">20</span> ch.</span>
               </div>
-              <button class="iconbtn" type="button" title="Info">i</button>
-            </div>
-          </div>
 
-          <div class="row">
-            <label class="label" for="url">URL</label>
-            <div class="row__field">
-              <input id="url" class="input" type="url" placeholder="https://example.com" />
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="label" for="notes">Notes</label>
-            <div class="row__field">
-              <textarea id="notes" class="textarea" rows="6" placeholder="Notes..."></textarea>
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="label" for="expires">Expires</label>
-            <div class="row__field row__field--tight">
-              <label class="check check--inline">
-                <input type="checkbox" />
-                <span>Enable</span>
-              </label>
-              <input id="expires" class="input" type="datetime-local" />
-              <button class="iconbtn" type="button" title="Calendar">📅</button>
+              <button class="iconbtn" type="button" title="Info (UI only)">i</button>
             </div>
           </div>
 
           <div class="actions">
             <button class="btn btn--primary" type="button">Generate Password</button>
             <button class="btn btn--secondary" type="button">Copy</button>
-            <button class="btn" type="button">Save Entry</button>
           </div>
 
           <p class="muted small">
-            * UI template only — password generation, entropy calculation, and clipboard copy are not implemented yet.
+            * UI template only — generation, entropy calculation, and clipboard copy are not implemented yet.
           </p>
+        </div>
+
+        <!-- Options (ONLY character set) -->
+        <div class="panel panel--options">
+          <fieldset class="fieldset">
+            <legend>Password Generation Options</legend>
+
+            <div class="row">
+              <label class="label" for="length">Length of generated password</label>
+              <div class="row__field row__field--tight">
+                <input id="length" class="input input--number" type="number" min="4" max="128" value="20" />
+                <span class="hint" id="lengthHint">20</span>
+              </div>
+            </div>
+
+            <div class="twoCol">
+              <div class="checkCol">
+                <label class="check"><input id="optUpper" type="checkbox" checked /> <span>Upper-case (A, B, C, ...)</span></label>
+                <label class="check"><input id="optLower" type="checkbox" checked /> <span>Lower-case (a, b, c, ...)</span></label>
+                <label class="check"><input id="optDigits" type="checkbox" checked /> <span>Digits (0, 1, 2, ...)</span></label>
+                <label class="check"><input id="optMinus" type="checkbox" /> <span>Minus (-)</span></label>
+                <label class="check"><input id="optUnderline" type="checkbox" /> <span>Underline (_)</span></label>
+              </div>
+
+              <div class="checkCol">
+                <label class="check"><input id="optSpace" type="checkbox" /> <span>Space ( )</span></label>
+                <label class="check"><input id="optSpecial" type="checkbox" /> <span>Special (!, $, %, &, ...)</span></label>
+                <label class="check"><input id="optBrackets" type="checkbox" /> <span>Brackets ({ }, [ ], ( ), &lt; &gt;)</span></label>
+                <label class="check"><input id="optLatin1" type="checkbox" /> <span>Latin-1 Supplement (Å, µ, ñ, ...)</span></label>
+              </div>
+            </div>
+
+            <div class="row">
+              <label class="label" for="includeChars">Also include the following characters</label>
+              <div class="row__field">
+                <input id="includeChars" class="input" type="text" placeholder="e.g., @#?" />
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="footerRow">
+            <button class="btn" type="button">OK</button>
+            <button class="btn btn--secondary" type="button">Cancel</button>
+          </div>
         </div>
       </section>
     </main>
