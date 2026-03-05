@@ -61,8 +61,8 @@
                 id="passwordOut"
                 class="input mono"
                 type="text"
-                value="(generated password will appear here)"
-                readonly
+                placeholder="(generated password will appear here)"
+                
               />
               <button class="iconbtn" type="button" title="Show/Hide (UI only)">👁</button>
               <button class="iconbtn" type="button" title="Generate (UI only)">🎲</button>
@@ -87,7 +87,7 @@
           </div>
 
           <div class="actions">
-            <button class="btn btn--primary" type="button">Generate Password</button>
+            <button class="btn btn--primary" type="button" onclick="generatePassword();">Generate Password</button>
             <button class="btn btn--secondary" type="button">Copy</button>
           </div>
 
