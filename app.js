@@ -1,6 +1,6 @@
 /*
 Requirements:
- -Copy button
+ -Copy button DONE
  -Save Encrypted
  -Save username
  -Save Identifier (Google.com, email, etc.)
@@ -50,16 +50,25 @@ const bracketSet = ["[", "]", "{", "}", "(", ")"];
 
 function generatePassword(){
   const masterSet = [];
+  const includeChars = [];
   var password = "";
   const pwLen = document.getElementById("length").value;
-  if(document.getElementById("optUpper").checked) masterSet.push(upperSet)
-  if(document.getElementById("optLower").checked) masterSet.push(lowerSet)
-  if(document.getElementById("optDigits").checked) masterSet.push(numSet)
-  if(document.getElementById("optMinus").checked) masterSet.push(minusSet)
-  if(document.getElementById("optUnderline").checked) masterSet.push(underSet)
-  if(document.getElementById("optSpace").checked) masterSet.push(spaceSet)
-  if(document.getElementById("optSpecial").checked) masterSet.push(specialSet)
-  if(document.getElementById("optBrackets").checked) masterSet.push(bracketSet)
+  if(document.getElementById("optUpper").checked) masterSet.push(upperSet);
+  if(document.getElementById("optLower").checked) masterSet.push(lowerSet);
+  if(document.getElementById("optDigits").checked) masterSet.push(numSet);
+  if(document.getElementById("optMinus").checked) masterSet.push(minusSet);
+  if(document.getElementById("optUnderline").checked) masterSet.push(underSet);
+  if(document.getElementById("optSpace").checked) masterSet.push(spaceSet);
+  if(document.getElementById("optSpecial").checked) masterSet.push(specialSet);
+  if(document.getElementById("optBrackets").checked) masterSet.push(bracketSet);
+  if(document.getElementById("includeChars").value != ""){
+    const chars = document.getElementById("includeChars").value;
+    for(const char of chars){
+      if(char == " ") continue;
+      else includeChars.push(char);
+    }
+    masterSet.push(includeChars);
+  }
 
 
   const pwSeed = new Uint32Array(pwLen);
