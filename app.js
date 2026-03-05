@@ -104,14 +104,27 @@ function copyPassword(){
   navigator.clipboard.writeText(copyText.value);
 };
 
+function updateQuality(pw) {
+  const poolSize = pw.length > 0 ? new Set(pw).size : 0; // unique chars used
+  const bits = (pw.length > 0 && poolSize > 1) ? (pw.length * Math.log2(poolSize)) : 0;
 
+  document.getElementById("qualityBits").textContent = Math.round(bits);
 
+  const MAX_ENTROPY = 128;
+  const percent = Math.min(100, (bits / MAX_ENTROPY) * 100);
+
+  document.querySelector(".quality__fill").style.width = percent + "%";
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const lengthInput = document.getElementById("length");
   const lengthHint = document.getElementById("lengthHint");
   const qualityChars = document.getElementById("qualityChars");
-
+  const pwBox = document.getElementById("passwordOut");
+  
+  pwBox.addEventListener("input", () => {
+    updateQuality(pwBox.value);
+  });
   const syncLength = () => {
     const v = lengthInput.value || "20";
     lengthHint.textContent = v;
