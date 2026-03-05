@@ -29,7 +29,7 @@ html,body{ height:100%; }
 body{
   margin:0;
   font-family: var(--sans);
-  background: --bg;
+  background: var(--bg);
   color:var(--text);
 }
 
