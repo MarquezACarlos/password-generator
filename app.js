@@ -72,15 +72,15 @@ function generatePassword(){
   if(includeChars.length > 0) masterSet.push(includeChars);
 
   //Entropy Calculation
-  for (const set of masterSet){
-    poolSize += set.length;
-  }
+  // for (const set of masterSet){
+  //   poolSize += set.length;
+  // }
 
-  const entropy = Math.log2(poolSize**pwLen);
-  document.getElementById("qualityBits").textContent = Math.round(entropy);
-  const MAX_ENTROPY = 128;
-  const percent = Math.min(100, (entropy/MAX_ENTROPY)*100);
-  document.querySelector(".quality__fill").style.width = percent + "%";
+  // const entropy = Math.log2(poolSize**pwLen);
+  // document.getElementById("qualityBits").textContent = Math.round(entropy);
+  // const MAX_ENTROPY = 128;
+  // const percent = Math.min(100, (entropy/MAX_ENTROPY)*100);
+  // document.querySelector(".quality__fill").style.width = percent + "%";
 
   const pwSeed = new Uint32Array(pwLen);
   self.crypto.getRandomValues(pwSeed);
@@ -91,7 +91,7 @@ function generatePassword(){
 
     password += masterSet[i][j];
   }
-
+  updateQuality(password);
   document.getElementById("passwordOut").value = password;
 };
 
@@ -143,8 +143,8 @@ function updateQuality(pw) {
   // Update UI
   document.getElementById("qualityBits").textContent = String(Math.round(bits));
 
-  const MAX_BITS = 128;
-  const pct = Math.max(0, Math.min(100, (bits / MAX_BITS) * 100));
+  const maxPossible = L * Math.log2(L);
+  const pct = Math.max(0, Math.min(100, (bits / maxPossible) * 100));
   document.querySelector(".quality__fill").style.width = pct + "%";
 }
 
@@ -155,7 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const pwBox = document.getElementById("passwordOut");
   
   pwBox.addEventListener("input", () => {
+    const pw = pwBox.value;
     updateQuality(pwBox.value);
+    if(qualityChars) qualityChars.textContent = pw.length;
   });
   const syncLength = () => {
     const v = lengthInput.value || "20";
