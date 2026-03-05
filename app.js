@@ -148,6 +148,27 @@ function updateQuality(pw) {
   document.querySelector(".quality__fill").style.width = pct + "%";
 }
 
+function savePassword(){
+  const webname = document.getElementById("website").value;
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("passwordOut").value;
+  const value = username+":"+password;
+  localStorage.setItem(webname, value);
+}
+
+function resetFields(){
+var elements = document.getElementsByTagName("input");
+for (var ii=0; ii < elements.length; ii++) {
+  if (elements[ii].type == "text") {
+    elements[ii].value = "";
+  }
+}
+
+}
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const lengthInput = document.getElementById("length");
   const lengthHint = document.getElementById("lengthHint");
