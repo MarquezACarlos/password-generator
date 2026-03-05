@@ -113,7 +113,7 @@ body{
 
 .input, .select, .textarea{
   width:100%;
-  background: #111;
+  background: var(--bg);
   border: 1px solid #333;
   color: var(--text);
   border-radius: 10px;
