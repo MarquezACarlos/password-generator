@@ -103,15 +103,49 @@ function copyPassword(){
 };
 
 function updateQuality(pw) {
-  const poolSize = pw.length > 0 ? new Set(pw).size : 0; // unique chars used
-  const bits = (pw.length > 0 && poolSize > 1) ? (pw.length * Math.log2(poolSize)) : 0;
+  const L = pw.length;
 
-  document.getElementById("qualityBits").textContent = Math.round(bits);
+  // Guard
+  if (L === 0) {
+    document.getElementById("qualityBits").textContent = "0";
+    document.querySelector(".quality__fill").style.width = "0%";
+    return;
+  }
 
-  const MAX_ENTROPY = 128;
-  const percent = Math.min(100, (bits / MAX_ENTROPY) * 100);
+  // Frequency map
+  const counts = new Map();
+  for (const ch of pw) counts.set(ch, (counts.get(ch) || 0) + 1);
 
-  document.querySelector(".quality__fill").style.width = percent + "%";
+  // Shannon entropy per character
+  let H = 0;
+  for (const c of counts.values()) {
+    const p = c / L;
+    H += -p * Math.log2(p);
+  }
+
+  // Total bits estimate
+  let bits = H * L;
+
+  // Optional: extra penalty for long runs of the same character (e.g., "ssssss")
+  const maxRun = (() => {
+    let best = 1, run = 1;
+    for (let i = 1; i < pw.length; i++) {
+      if (pw[i] === pw[i - 1]) run++;
+      else { best = Math.max(best, run); run = 1; }
+    }
+    return Math.max(best, run);
+  })();
+
+  if (maxRun >= 4) bits *= 0.85;   // mild penalty
+  if (maxRun >= 8) bits *= 0.70;   // stronger penalty
+  if (maxRun >= 12) bits *= 0;     // severe penalty
+
+  // Update UI
+  document.getElementById("qualityBits").textContent = String(Math.round(bits));
+
+  const MAX_BITS = 128;
+  const pct = Math.max(0, Math.min(100, (bits / MAX_BITS) * 100));
+  document.querySelector(".quality__fill").style.width = pct + "%";
 }
 
 document.addEventListener("DOMContentLoaded", () => {

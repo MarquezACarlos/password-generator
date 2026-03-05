@@ -235,10 +235,11 @@ body{
 /* this is now just a mask/window */
 .quality__fill{
   height: 100%;
-  width: 65%;             /* your inline width still works */
+  width: 65%;             
   background: transparent;
   border-radius: 999px;
   position: relative;
+  transition: width 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 /* darken the UNFILLED remainder */
 .quality__fill::after{
