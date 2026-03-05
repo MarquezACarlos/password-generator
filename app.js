@@ -71,10 +71,13 @@ function generatePassword(){
     password += masterSet[i][j];
     document.getElementById("passwordOut").value = password;
   }
-  
-  
-  
-  
+};
+
+function copyPassword(){
+  var copyText = document.getElementById("passwordOut");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(copyText.value);
 };
 
 // document.getElementById("PRESSED").onclick = function() {
