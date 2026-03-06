@@ -6,11 +6,12 @@
 
   --panel: #ffffff;
   --panel-light: #bbbbbb;
+  --panel-dark: #969696;
 
   --line: #2a2a2a;
 
   /* Accent colors */
-  --accent: #0099ff;   /* crimson */
+  --accent: #002fff;   /* crimson */
   --accent-soft: #0063a598;
 
   --good:#3cff00;
@@ -153,8 +154,10 @@ body{
 .btn:hover{ border-color: rgba(122,162,255,.55); }
 .btn--secondary{ color: var(--muted); }
 .btn:hover{
-  border-color: var(--accent);
-  background: var(--accent-soft);
+  transition-duration: 0.4s;
+  border-color: var(--line);
+  background: var(--panel-dark);
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
 }
 .btn--ghost{
   background: transparent;
