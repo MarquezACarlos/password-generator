@@ -47,6 +47,31 @@ const numSet = ["0","1","2","3","4","5","6","7","8","9"];
 const specialSet = ["!","@","#","$","%","^","&","*","+","=", "/", "|", "\\", ";", ":", "?", "\"", "\'", ",", ".", "~", "`"]; //22
 const bracketSet = ["[", "]", "{", "}", "(", ")"];
 
+function getPoolSizeFromSettings(){
+  let poolSize = 0;
+
+  if (document.getElementById("optUpper").checked) poolSize += upperSet.length;
+  if (document.getElementById("optLower").checked) poolSize += lowerSet.length;
+  if (document.getElementById("optDigits").checked) poolSize += numSet.length;
+  if (document.getElementById("optSpecial").checked) poolSize += specialSet.length;
+  if (document.getElementById("optBrackets").checked) poolSize += bracketSet.length;
+
+  // single-char toggles
+  if (document.getElementById("optMinus").checked) poolSize += 1;
+  if (document.getElementById("optUnderline").checked) poolSize += 1;
+  if (document.getElementById("optSpace").checked) poolSize += 1;
+
+  // includeChars text box: count UNIQUE non-space chars
+  const extra = document.getElementById("includeChars").value || "";
+  const uniq = new Set();
+  for (const ch of extra) {
+    if (ch !== " ") uniq.add(ch);
+  }
+  poolSize += uniq.size;
+
+  return Math.max(poolSize, 1);
+}
+
 function generatePassword(){
   const masterSet = [];
   const includeChars = [];
@@ -93,17 +118,19 @@ function generatePassword(){
   }
   updateQuality(password);
   document.getElementById("passwordOut").value = password;
-};
+}
 
 function copyPassword(){
   var copyText = document.getElementById("passwordOut");
   copyText.select();
   copyText.setSelectionRange(0, 99999);
   navigator.clipboard.writeText(copyText.value);
-};
+}
 
-function updateQuality(pw) {
+function updateQuality(pw){
   const L = pw.length;
+  const qualityChars = document.getElementById("qualityChars");
+  if(qualityChars) qualityChars.textContent = String(L);
 
   // Guard
   if (L === 0) {
@@ -143,8 +170,13 @@ function updateQuality(pw) {
   // Update UI
   document.getElementById("qualityBits").textContent = String(Math.round(bits));
 
-  const maxPossible = L * Math.log2(L);
-  const pct = Math.max(0, Math.min(100, (bits / maxPossible) * 100));
+  const poolSize = getPoolSizeFromSettings();
+  const poolBits = L * Math.log2(poolSize);
+  bits = Math.min(bits, poolBits); 
+  if (L < 8) pct = Math.min(pct, 25);
+  document.getElementById("qualityBits").textContent = String(Math.round(bits));
+  const strongBits = 80;
+  let pct = Math.min(100, Math.min(100, (bits / strongBits) * 100));
   document.querySelector(".quality__fill").style.width = pct + "%";
 }
 
@@ -166,26 +198,39 @@ for (var ii=0; ii < elements.length; ii++) {
 
 }
 
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const lengthInput = document.getElementById("length");
-  const lengthHint = document.getElementById("lengthHint");
-  const qualityChars = document.getElementById("qualityChars");
-  const pwBox = document.getElementById("passwordOut");
-  
-  pwBox.addEventListener("input", () => {
-    const pw = pwBox.value;
-    updateQuality(pwBox.value);
-    if(qualityChars) qualityChars.textContent = pw.length;
-  });
+  const lengthHint  = document.getElementById("lengthHint");
+  const pwBox       = document.getElementById("passwordOut");
+
+  const refresh = () => updateQuality(pwBox.value);
+
+  pwBox.addEventListener("input", refresh);                 
+  pwBox.addEventListener("change", refresh);                
+  pwBox.addEventListener("keyup", refresh);                 
+  pwBox.addEventListener("paste", () => setTimeout(refresh, 0)); 
+  pwBox.addEventListener("cut",   () => setTimeout(refresh, 0)); 
+  pwBox.addEventListener("focus", refresh);                 
+
+  const settingsIds = [
+    "optUpper","optLower","optDigits","optMinus","optUnderline","optSpace",
+    "optSpecial","optBrackets","includeChars"
+  ];
+
+  for (const id of settingsIds) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+
+    el.addEventListener("input", refresh);
+    el.addEventListener("change", refresh);
+  }
+
   const syncLength = () => {
-    const v = lengthInput.value || "20";
-    lengthHint.textContent = v;
-    if (qualityChars) qualityChars.textContent = v;
+    lengthHint.textContent = String(lengthInput.value || 20);
   };
 
   lengthInput.addEventListener("input", syncLength);
   syncLength();
+
+  refresh();
 });
