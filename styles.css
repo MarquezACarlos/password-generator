@@ -150,11 +150,11 @@ body{
   padding: 10px 12px;
   border-radius: 12px;
   cursor:pointer;
+  transition-duration: 0.4s;
 }
 .btn:hover{ border-color: rgba(122,162,255,.55); }
 .btn--secondary{ color: var(--muted); }
 .btn:hover{
-  transition-duration: 0.4s;
   border-color: var(--line);
   background: var(--panel-dark);
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
