@@ -219,13 +219,5 @@ document.addEventListener("DOMContentLoaded", () => {
       toggleBtn.textContent = "Hide";
     }
   });
-
-  const syncLength = () => {
-    lengthHint.textContent = String(lengthInput.value || 20);
-  };
-
-  lengthInput.addEventListener("input", syncLength);
-  syncLength();
-
   refresh();
 });

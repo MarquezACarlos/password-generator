@@ -63,7 +63,7 @@
                 placeholder="(generated password will appear here)"
                 
               />
-              <button id="toggleView" class="iconbtn" type="button" title="Show/Hide (UI only)">Hide</button>
+              <button id="toggleView" class="btn --iconbtn" type="button" title="Show/Hide (UI only)">Hide</button>
             </div>
           </div>
 
@@ -86,9 +86,7 @@
             <button class="btn btn--primary" type="button" onclick="generatePassword();">Generate Password</button>
             <button class="btn btn--secondary" type="button" onclick = "copyPassword(); ">Copy</button>
           </div>
-
           <p class="muted small">
-            * UI template only — generation, entropy calculation, and clipboard copy are not implemented yet.
           </p>
         </div>
 
@@ -101,7 +99,7 @@
               <label class="label" for="length">Length of generated password</label>
               <div class="row__field row__field--tight">
                 <input id="length" class="input input--number" type="number" min="4" max="128" value="20" />
-                <span class="hint" id="lengthHint">20</span>
+                <span class="hint" id="lengthHint">Length min: 4 | Lenght max: 128</span>
               </div>
             </div>
 

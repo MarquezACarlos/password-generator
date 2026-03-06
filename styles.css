@@ -10,8 +10,8 @@
   --line: #2a2a2a;
 
   /* Accent colors */
-  --accent: #990000;   /* crimson */
-  --accent-soft: #bb0000;
+  --accent: #0099ff;   /* crimson */
+  --accent-soft: #0063a598;
 
   --good:#3cff00;
   --warn:#ff7e28;
@@ -154,6 +154,7 @@ body{
 .btn--secondary{ color: var(--muted); }
 .btn:hover{
   border-color: var(--accent);
+  background: var(--accent-soft);
 }
 .btn--ghost{
   background: transparent;
