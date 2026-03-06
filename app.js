@@ -13,33 +13,16 @@ Optional Features/Bonus:
     -CVV (PIN Type, some have 3 others have 4)
  -Retrieve Passwords
 */
+  //Entropy Calculation
+  // for (const set of masterSet){
+  //   poolSize += set.length;
+  // }
 
-// for (const num of pwSeed){
-      // const set = num%4;
-      // if(set == 0){
-      //   password += charSet[num%26];
-      //   document.getElementById("passwordOut").value = password;
-      // }
-      // else if (set == 1){
-      //   password += numSet[num%10];
-      //   document.getElementById("passwordOut").value = password;
-      // }
-      // else if (set == 2){
-      //   password += specialSet[num%22];
-      //   document.getElementById("passwordOut").value = password;
-      // }
-      // else{
-      //   password += charSet[num%26].toUpperCase();
-      //   document.getElementById("passwordOut").value = password;
-      // }
-// var upper = document.getElementById("optUpper").checked;
-//   if (upper){
-//     alert("yes");
-//   }
-//   alert(document.getElementById("optUpper").value);
-// document.getElementById("PRESSED").onclick = function() {
-//   alert("lets go");
-// };
+  // const entropy = Math.log2(poolSize**pwLen);
+  // document.getElementById("qualityBits").textContent = Math.round(entropy);
+  // const MAX_ENTROPY = 128;
+  // const percent = Math.min(100, (entropy/MAX_ENTROPY)*100);
+  // document.querySelector(".quality__fill").style.width = percent + "%";
 
 const lowerSet = ["a", "b","c", "d","e", "f","g", "h","i", "j","k", "l","m", "n","o", "p","q", "r","s", "t","u", "v","w", "x","y", "z"];
 const upperSet = ["A", "B","C", "D","E", "F","G", "H","I", "J","K", "L","M", "N","O", "P","Q", "R","S", "T","U", "V","W", "X","Y", "Z"];
@@ -96,28 +79,24 @@ function generatePassword(){
   }
   if(includeChars.length > 0) masterSet.push(includeChars);
 
-  //Entropy Calculation
-  // for (const set of masterSet){
-  //   poolSize += set.length;
-  // }
-
-  // const entropy = Math.log2(poolSize**pwLen);
-  // document.getElementById("qualityBits").textContent = Math.round(entropy);
-  // const MAX_ENTROPY = 128;
-  // const percent = Math.min(100, (entropy/MAX_ENTROPY)*100);
-  // document.querySelector(".quality__fill").style.width = percent + "%";
-
   const pwSeed = new Uint32Array(pwLen);
   self.crypto.getRandomValues(pwSeed);
   
   for(const num of pwSeed){
     const i = num%masterSet.length;
     const j = Math.floor((Math.random()*masterSet[i].length));
-
     password += masterSet[i][j];
   }
-  updateQuality(password);
+
+  const pwBox = document.getElementById("passwordOut");
+  const toggleBtn = document.getElementById("toggleView");
+
+  pwBox.value = password;
+  pwBox.type = "text";
+  toggleBtn.textContent = "Hide";
+
   document.getElementById("passwordOut").value = password;
+  updateQuality(password);
 }
 
 function copyPassword(){
@@ -173,10 +152,10 @@ function updateQuality(pw){
   const poolSize = getPoolSizeFromSettings();
   const poolBits = L * Math.log2(poolSize);
   bits = Math.min(bits, poolBits); 
-  if (L < 8) pct = Math.min(pct, 25);
   document.getElementById("qualityBits").textContent = String(Math.round(bits));
   const strongBits = 80;
-  let pct = Math.min(100, Math.min(100, (bits / strongBits) * 100));
+  let pct = Math.max(0, Math.min(100, (bits / strongBits) * 100));
+  if (L < 8) pct = Math.min(pct, 25);
   document.querySelector(".quality__fill").style.width = pct + "%";
 }
 
@@ -224,6 +203,22 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("input", refresh);
     el.addEventListener("change", refresh);
   }
+
+  lengthInput.addEventListener("input", () => {
+    lengthInput.value = lengthInput.value.replace(/\D/g, "");
+  });
+
+  const toggleBtn = document.getElementById("toggleView");
+
+  toggleBtn.addEventListener("click", () => {
+    if (pwBox.type === "text") {
+      pwBox.type = "password";
+      toggleBtn.textContent = "Show";
+    } else {
+      pwBox.type = "text";
+      toggleBtn.textContent = "Hide";
+    }
+  });
 
   const syncLength = () => {
     lengthHint.textContent = String(lengthInput.value || 20);

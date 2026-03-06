@@ -17,7 +17,6 @@
         </div>
       </div>
       <div class="topbar__actions">
-        <button class="btn btn--ghost" type="button">Help</button>
       </div>
     </header>
 
@@ -64,7 +63,7 @@
                 placeholder="(generated password will appear here)"
                 
               />
-              <button class="iconbtn" type="button" title="Show/Hide (UI only)">👁</button>
+              <button id="toggleView" class="iconbtn" type="button" title="Show/Hide (UI only)">Hide</button>
             </div>
           </div>
 
@@ -132,7 +131,7 @@
 
           <div class="footerRow">
             <button class="btn" type="button" onclick="savePassword()">Save Password</button>
-            <button class="btn btn--secondary" type="button" onclick="resetFields()" >Cancel</button>
+            <button class="btn btn--secondary" type="button" onclick="resetFields()" >Reset</button>
           </div>
         </div>
       </section>
