@@ -16,8 +16,6 @@
           <p class="brand__subtitle">KeePass-inspired generator + strength preview</p>
         </div>
       </div>
-      <div class="topbar__actions">
-      </div>
     </header>
 
     <main class="single">
@@ -27,7 +25,6 @@
           <p>Configure character set options and preview strength in one place.</p>
         </div>
 
-        <!-- Output (TOP) -->
         <div class="panel">
           <div class="row">
             <label class="label" for="website">Website</label>
@@ -59,11 +56,59 @@
               <input
                 id="passwordOut"
                 class="input mono"
-                type="text"
+                type="password"
                 placeholder="(generated password will appear here)"
-                
               />
-              <button id="toggleView" class="btn --iconbtn" type="button" title="Show/Hide (UI only)">Hide</button>
+              <button id="toggleView" class="btn iconbtn" type="button" title="Show/Hide">Show</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="label">Credit Card</label>
+            <div class="row__field row__field--stack">
+              <label class="check subsection-toggle">
+                <input id="attachCard" type="checkbox" />
+                <span>Attach credit card information to this website entry</span>
+              </label>
+
+              <div id="cardSubsection" class="card-subsection" style="display:none;">
+                <div class="subrow">
+                  <label class="sublabel" for="cardLabel">Card Label</label>
+                  <input id="cardLabel" class="input" type="text" placeholder="e.g., Personal Visa, Business AMEX" />
+                </div>
+
+                <div class="subrow">
+                  <label class="sublabel" for="cardholder">Cardholder</label>
+                  <input id="cardholder" class="input" type="text" placeholder="Name on card" />
+                </div>
+
+                <div class="subrow">
+                  <label class="sublabel" for="cardNumber">Card Number</label>
+                  <input id="cardNumber" class="input mono" type="text" placeholder="XXXX XXXX XXXX XXXX" />
+                </div>
+
+                <div class="subrow subrow--split">
+                  <div>
+                    <label class="sublabel" for="expMonth">Exp. Month</label>
+                    <input id="expMonth" class="input input--number" type="number" min="1" max="12" placeholder="MM" />
+                  </div>
+
+                  <div>
+                    <label class="sublabel" for="expYear">Exp. Year</label>
+                    <input id="expYear" class="input input--number" type="number" min="2025" max="2100" placeholder="YYYY" />
+                  </div>
+
+                  <div>
+                    <label class="sublabel" for="cvv">CVV</label>
+                    <input id="cvv" class="input mono input--number" type="text" placeholder="3 or 4 digits" />
+                  </div>
+                </div>
+
+                <div class="card-meta">
+                  <span class="hint" id="cardBrandHint">Brand: Unknown</span>
+                  <span class="hint" id="cvvHint">CVV depends on card type</span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -71,7 +116,6 @@
             <label class="label">Quality</label>
             <div class="row__field quality">
               <div class="quality__bar" aria-hidden="true">
-                <!-- UI-only placeholder fill -->
                 <div class="quality__fill" style="width: 0%"></div>
               </div>
 
@@ -83,14 +127,11 @@
           </div>
 
           <div class="actions">
-            <button class="btn btn--primary" type="button" onclick="generatePassword();">Generate Password</button>
-            <button class="btn btn--secondary" type="button" onclick = "copyPassword(); ">Copy</button>
+            <button class="btn btn--primary" type="button" onclick="generatePassword()">Generate Password</button>
+            <button class="btn btn--secondary" type="button" onclick="copyPassword()">Copy</button>
           </div>
-          <p class="muted small">
-          </p>
         </div>
 
-        <!-- Options (ONLY character set) -->
         <div class="panel panel--options">
           <fieldset class="fieldset">
             <legend>Password Generation Options</legend>
@@ -99,7 +140,7 @@
               <label class="label" for="length">Length of generated password</label>
               <div class="row__field row__field--tight">
                 <input id="length" class="input input--number" type="number" min="4" max="128" value="20" />
-                <span class="hint" id="lengthHint">Length min: 4 | Lenght max: 128</span>
+                <span class="hint">Length min: 4 | Length max: 128</span>
               </div>
             </div>
 
@@ -128,41 +169,44 @@
           </fieldset>
 
           <div class="footerRow">
-            <button class="btn btn--primary" type="button" onclick="addToQueue()">＋ Add to Queue</button>
-            <button class="btn btn--secondary" type="button" onclick="resetFields()">Reset</button>
+            <button class="btn btn--primary" type="button" onclick="addEntryToQueue()">＋ Add to Queue</button>
+            <button class="btn btn--secondary" type="button" onclick="resetAllFields()">Reset</button>
           </div>
         </div>
 
-        <!-- Queue Section -->
         <div id="queueSection" class="panel panel--queue" style="display:none;">
           <div class="queue-header">
             <span class="queue-title">Queued Entries (<span id="queueCount">0</span>)</span>
             <div class="queue-exports">
-              <button class="btn btn--primary" type="button" onclick="exportEncrypted()">💾 Export Encrypted (.enc)</button>
+              <button class="btn btn--primary" type="button" onclick="exportEncrypted()">Export Encrypted (.enc)</button>
               <button class="btn" type="button" onclick="exportPlain()">Export Plain JSON</button>
             </div>
           </div>
-          <!-- Search Bar (hidden until successful import) -->
+
           <div id="queueSearchWrap" class="queue-search" style="display:none;">
             <input
               id="queueSearch"
               class="input"
               type="text"
-              placeholder="Search by website or username..."
+              placeholder="Search by website, username, card label, or cardholder..."
               oninput="filterQueueEntries()"
             />
           </div>
+
           <div class="queue-labels">
-            <span>Website</span><span>Username</span><span>Password</span><span></span>
+            <span>Website</span>
+            <span>Username</span>
+            <span>Password / Card</span>
+            <span></span>
           </div>
+
           <div id="queueList"></div>
         </div>
 
-        <!-- Import Section -->
         <div class="panel panel--import">
           <div class="import-row">
             <span class="import-label">Load a saved vault</span>
-            <button class="btn" type="button" onclick="triggerImport()">📂 Import .enc File</button>
+            <button class="btn" type="button" onclick="triggerImport()">Import .enc File</button>
             <input
               id="importFileInput"
               type="file"
