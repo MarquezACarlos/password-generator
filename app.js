@@ -205,11 +205,33 @@ function _renderQueue(entriesToRender = savedEntries) {
     row.innerHTML = `
       <span class="queue-site">${_esc(entry.website)}</span>
       <span class="queue-user">${_esc(entry.username)}</span>
-      <span class="queue-pw mono">••••••••</span>
-      <button class="btn btn--ghost queue-remove" title="Remove" onclick="removeEntry(${actualIndex})">✕</button>
+      <span class="queue-pw mono" id="pw-${actualIndex}">••••••••</span>
+
+      <span class="queue-actions">
+          <button class="btn btn--ghost" onclick="togglePassword(${actualIndex})">
+            Show
+          </button>
+
+          <button class="btn btn--ghost queue-remove" onclick="removeEntry(${actualIndex})">
+            X
+          </button>
+      </span>
     `;
     list.appendChild(row);
   });
+}
+
+function togglePassword(index) {
+  const pwElement = document.getElementById(`pw-${index}`);
+  if (!pwElement) return;
+
+  const actualPassword = savedEntries[index].password;
+
+  if (pwElement.textContent === "••••••••") {
+    pwElement.textContent = actualPassword;
+  } else {
+    pwElement.textContent = "••••••••";
+  }
 }
 
 function filterQueueEntries() {

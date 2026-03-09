@@ -298,10 +298,15 @@ body{
   flex-wrap: wrap;
 }
 
-.queue-labels {
+.queue-labels,
+.queue-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 36px;
+  grid-template-columns: 1fr 1fr 1fr 120px;
   gap: 8px;
+  align-items: center;
+}
+
+.queue-labels {
   padding: 4px 8px;
   font-size: 11px;
   color: var(--muted);
@@ -315,11 +320,13 @@ body{
   margin: 10px 0 12px;
 }
 
-.queue-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 36px;
+.queue-actions {
+  display: flex;
   gap: 8px;
   align-items: center;
+}
+
+.queue-row {
   padding: 7px 8px;
   border-radius: 8px;
   font-size: 13px;
