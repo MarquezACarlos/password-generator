@@ -142,6 +142,16 @@
               <button class="btn" type="button" onclick="exportPlain()">Export Plain JSON</button>
             </div>
           </div>
+          <!-- Search Bar (hidden until successful import) -->
+          <div id="queueSearchWrap" class="queue-search" style="display:none;">
+            <input
+              id="queueSearch"
+              class="input"
+              type="text"
+              placeholder="Search by website or username..."
+              oninput="filterQueueEntries()"
+            />
+          </div>
           <div class="queue-labels">
             <span>Website</span><span>Username</span><span>Password</span><span></span>
           </div>

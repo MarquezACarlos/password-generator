@@ -1,9 +1,9 @@
 /*
 Requirements:
  -Copy button DONE
- -Save Encrypted
- -Save username
- -Save Identifier (Google.com, email, etc.)
+ -Save Encrypted DONE
+ -Save username DONE
+ -Save Identifier (Google.com, email, etc.) DONE
 
 Optional Features/Bonus:
  -Retrieve Passwords
@@ -11,7 +11,6 @@ Optional Features/Bonus:
     -Card Number & Length (Double check for each type of credit card, and VALID NUMBERS)
     -Expiration Date (Won't store if expired)
     -CVV (PIN Type, some have 3 others have 4)
- -Retrieve Passwords
 */
   //Entropy Calculation
   // for (const set of masterSet){
@@ -189,7 +188,7 @@ function _esc(str) {
   return str.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
-function _renderQueue() {
+function _renderQueue(entriesToRender = savedEntries) {
   const list    = document.getElementById("queueList");
   const section = document.getElementById("queueSection");
   const count   = document.getElementById("queueCount");
@@ -198,17 +197,38 @@ function _renderQueue() {
   count.textContent = savedEntries.length;
   section.style.display = savedEntries.length ? "block" : "none";
 
-  savedEntries.forEach((entry, idx) => {
+  entriesToRender.forEach((entry) => {
+    const actualIndex = savedEntries.indexOf(entry);
+
     const row = document.createElement("div");
     row.className = "queue-row";
     row.innerHTML = `
       <span class="queue-site">${_esc(entry.website)}</span>
       <span class="queue-user">${_esc(entry.username)}</span>
       <span class="queue-pw mono">••••••••</span>
-      <button class="btn btn--ghost queue-remove" title="Remove" onclick="removeEntry(${idx})">✕</button>
+      <button class="btn btn--ghost queue-remove" title="Remove" onclick="removeEntry(${actualIndex})">✕</button>
     `;
     list.appendChild(row);
   });
+}
+
+function filterQueueEntries() {
+  const searchInput = document.getElementById("queueSearch");
+  if (!searchInput) return;
+
+  const term = searchInput.value.trim().toLowerCase();
+
+  if (!term) {
+    _renderQueue();
+    return;
+  }
+
+  const filtered = savedEntries.filter(entry =>
+    entry.website.toLowerCase().includes(term) ||
+    entry.username.toLowerCase().includes(term)
+  );
+
+  _renderQueue(filtered);
 }
 
 function addToQueue() {
@@ -225,7 +245,13 @@ function addToQueue() {
 
 function removeEntry(idx) {
   savedEntries.splice(idx, 1);
-  _renderQueue();
+
+  const searchInput = document.getElementById("queueSearch");
+  if (searchInput && searchInput.value.trim() !== "") {
+    filterQueueEntries();
+  } else {
+    _renderQueue();
+  }
 }
 
 // ── Export Plain JSON ─────────────────────────────────────────────────────────
@@ -324,6 +350,8 @@ async function importEncrypted(file) {
     }
 
     _renderQueue();
+    const searchWrap = document.getElementById("queueSearchWrap");
+    if (searchWrap) searchWrap.style.display = "block";
     _setImportStatus(`✔ Loaded ${added} entr${added === 1 ? "y" : "ies"} from "${file.name}"`);
 
   } catch (err) {

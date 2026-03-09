@@ -311,6 +311,10 @@ body{
   margin-bottom: 4px;
 }
 
+.queue-search {
+  margin: 10px 0 12px;
+}
+
 .queue-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 36px;
