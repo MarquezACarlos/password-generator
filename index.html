@@ -128,9 +128,40 @@
           </fieldset>
 
           <div class="footerRow">
-            <button class="btn" type="button" onclick="savePassword()">Save Password</button>
-            <button class="btn btn--secondary" type="button" onclick="resetFields()" >Reset</button>
+            <button class="btn btn--primary" type="button" onclick="addToQueue()">＋ Add to Queue</button>
+            <button class="btn btn--secondary" type="button" onclick="resetFields()">Reset</button>
           </div>
+        </div>
+
+        <!-- Queue Section -->
+        <div id="queueSection" class="panel panel--queue" style="display:none;">
+          <div class="queue-header">
+            <span class="queue-title">Queued Entries (<span id="queueCount">0</span>)</span>
+            <div class="queue-exports">
+              <button class="btn btn--primary" type="button" onclick="exportEncrypted()">💾 Export Encrypted (.enc)</button>
+              <button class="btn" type="button" onclick="exportPlain()">Export Plain JSON</button>
+            </div>
+          </div>
+          <div class="queue-labels">
+            <span>Website</span><span>Username</span><span>Password</span><span></span>
+          </div>
+          <div id="queueList"></div>
+        </div>
+
+        <!-- Import Section -->
+        <div class="panel panel--import">
+          <div class="import-row">
+            <span class="import-label">Load a saved vault</span>
+            <button class="btn" type="button" onclick="triggerImport()">📂 Import .enc File</button>
+            <input
+              id="importFileInput"
+              type="file"
+              accept=".enc"
+              style="display:none"
+              onchange="importEncrypted(this.files[0])"
+            />
+          </div>
+          <div id="importStatus" class="import-status"></div>
         </div>
       </section>
     </main>
